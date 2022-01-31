@@ -11,4 +11,7 @@ def circumference(r):
 
 
 def surface_area(r):
+    '''
+	This function returns the surface area of a circle.
+    ''' 
     return np.pi*r**2
