@@ -10,4 +10,4 @@ def NastyResponse(name):
 
 NastyResponse("Mert")
 
-
+NastyResponse("Sebastian")
