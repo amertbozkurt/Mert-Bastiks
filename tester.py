@@ -10,12 +10,9 @@ def NastyResponse(name):
 
 NastyResponse("Mert")
 
-
 def Response():
     print("yiff yiff yiff, yap yap yap")
     return 
 
 print("What does the fox say??")
 Response()
-
-
