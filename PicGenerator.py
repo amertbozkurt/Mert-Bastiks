@@ -32,7 +32,7 @@ class HistogramNormalize(colors.Normalize):
 
 
 def fractal(p,c):
-    """ Generates a fractal from a Multibrot
+    """ Generates a fractal from the Multibrot
     set.
     
     Parameters
@@ -56,17 +56,31 @@ def fractal(p,c):
     return z
 
 
-def Rand_pic():
-    c_maps=['jet','viridis','plasma','inferno','magma','cividis','rainbow','nipy_spectral','brg']
-    c=np.random.randint(0,len(c_maps))
+def find_fractal(p):
+    """
+    This function finds an element of Multibrot
+    set by searching random points in the complex
+    plane.
+    
+    Parameters
+    ---------
+    
+    p : Int
+        Degree of the Multibrot set.
+    
+    Returns
+    ---------
+    
+    z_v : 128x128 array
+        The array of the fractal image
+    """
     
     std=0
     
     while std<1e3:
-        p=int(np.random.uniform(2,8))
-        x0=np.random.uniform(-2,0.5)
-        y0=np.random.uniform(-2,2)
-        d_0=np.random.uniform(0,0.75)
+        x0=np.random.uniform(-2,0.5) # a random number for the real part of c
+        y0=np.random.uniform(-2,2) # a random number for the imaginary part of c
+        d_0=np.random.uniform(0,0.75) # sets the distance in the complex plane
     
         x_v=np.linspace(x0,x0+d_0,num=128)
         y_v=np.linspace(y0,y0+d_0,num=128)
@@ -74,19 +88,50 @@ def Rand_pic():
         z_v=np.abs(np.array([fractal(p,x_v+1j*y_v[i]) for i in range(len(y_v))]))
         
         std=np.std(z_v)
-    #print(std)
+    
+    return z_v
+
+
+def plot_fractal(z_v, c_idx = 0):
+    """
+    Plots the fractal defined by the array z_v with a colormap
+    chosen by the user supplied integer c_idx
+    
+    Parameters
+    ---------
+    
+    z_v : array
+        The array of the fractal image
+        
+    c_idx: int
+        Index of the colormaps given below.
+    
+    Returns
+    ---------
+    
+    The fractal plot
+    """
+    c_maps=['jet','viridis','plasma','inferno','magma','cividis','rainbow','nipy_spectral','brg', 'RdBu']
+    
     normalizer = HistogramNormalize(np.arctanh(z_v))
     fig,ax=plt.subplots()
-    im=ax.imshow(np.arctanh(z_v),cmap=c_maps[c],norm=normalizer)#1/(np.exp(z_v/np.max(z_v))+1)
+    im=ax.imshow(np.arctanh(z_v),cmap=c_maps[c_idx],norm=normalizer)#1/(np.exp(z_v/np.max(z_v))+1)
     ax.axis('off')
     #fig.colorbar(im)
     #plt.show()
 
     return fig
 
+
 # +
 # for i in range(100):
 #     Rand_pic().savefig(r"TPics/fig_{}".format(i),dpi=100,format='png')
 # -
+
+p = 3
+z = find_fractal(p)
+
+color_index = 9
+plot_fractal(z, c_idx = color_index)
 
 
