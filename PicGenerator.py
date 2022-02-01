@@ -112,7 +112,7 @@ def plot_fractal(z_v, c_idx = 0):
     
     normalizer = HistogramNormalize(np.tanh(z_v))
     fig,ax=plt.subplots()
-    im=ax.imshow(np.tanh(z_v),cmap=c_maps[c_idx],norm=normalizer)#1/(np.exp(z_v/np.max(z_v))+1)
+    im=ax.imshow(np.tanh(z_v),cmap=c_maps[c_idx],norm=normalizer)
     ax.axis('off')
     #fig.colorbar(im)
     #plt.show()
@@ -120,16 +120,22 @@ def plot_fractal(z_v, c_idx = 0):
     return fig
 
 
-# +
-# for i in range(100):
-#     Rand_pic().savefig(r"TPics/fig_{}".format(i),dpi=100,format='png')
-# -
-
 p = 3
 z = find_fractal(p)
-print(z[np.where(z>1)])
+
+for i in range(100):
+    p = np.random.randint(2,8)
+    color_index = np.random.randint(0,9)
+    z = find_fractal(p)
+    plot_fractal(z, c_idx = color_index).savefig(r"TPics/fig_{}".format(i),dpi=100,format='png')
 
 color_index = 9
-plot_fractal(z, c_idx = color_index)
+fig = plot_fractal(z, c_idx = color_index)
+
+# +
+from matplotlib import cm
+
+cm.jet(-20)
+# -
 
 
