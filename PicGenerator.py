@@ -6,14 +6,6 @@ from numba import jit,njit
 import matplotlib.pyplot as plt
 import matplotlib.colors as colors
 
-""" 
-This file is meant to generate normalized figures based on the Multibrot sequences z_(n+1)=z^p+c. 
-
-The output is a set of 64x64 pictures of pieces of the Multibrot set where the output values are normalized.
-
-
-"""
-
 
 class HistogramNormalize(colors.Normalize):
     def __init__(self, data, vmin=None, vmax=None):
@@ -31,7 +23,7 @@ class HistogramNormalize(colors.Normalize):
                                   len(self.sorted_data))
 
 
-def fractal(p,c):
+def fractal(p,c, iteration = 100):
     """ Generates a fractal from the Multibrot
     set.
     
@@ -42,23 +34,27 @@ def fractal(p,c):
         The degree of the polynomial
     c : complex
         Initial complex number
+    iteration: Int
+        Number of iterations for the fractals
     
     Returns
     -------
     
-    z : The 
+    z : complex
+        Iterated complex value z
     
     """
-    z=0
-    for i in range(100):
+    z = 0
+    for i in range(iteration):
         z=z**p+c
+    
     z[np.where(np.isnan(z)==True)]=0
+    
     return z
 
 
 def find_fractal(p):
-    """
-    This function finds an element of Multibrot
+    """ This function finds an element of Multibrot
     set by searching random points in the complex
     plane.
     
@@ -67,6 +63,7 @@ def find_fractal(p):
     
     p : Int
         Degree of the Multibrot set.
+    
     
     Returns
     ---------
@@ -86,6 +83,7 @@ def find_fractal(p):
         y_v=np.linspace(y0,y0+d_0,num=128)
     
         z_v=np.abs(np.array([fractal(p,x_v+1j*y_v[i]) for i in range(len(y_v))]))
+        #z_v=np.abs(np.array([mandel_numpy(p,x_v+1j*y_v[i]) for i in range(len(y_v))]))
         
         std=np.std(z_v)
     
@@ -93,8 +91,7 @@ def find_fractal(p):
 
 
 def plot_fractal(z_v, c_idx = 0):
-    """
-    Plots the fractal defined by the array z_v with a colormap
+    """ Plots the fractal defined by the array z_v with a colormap
     chosen by the user supplied integer c_idx
     
     Parameters
@@ -113,9 +110,9 @@ def plot_fractal(z_v, c_idx = 0):
     """
     c_maps=['jet','viridis','plasma','inferno','magma','cividis','rainbow','nipy_spectral','brg', 'RdBu']
     
-    normalizer = HistogramNormalize(np.arctanh(z_v))
+    normalizer = HistogramNormalize(np.tanh(z_v))
     fig,ax=plt.subplots()
-    im=ax.imshow(np.arctanh(z_v),cmap=c_maps[c_idx],norm=normalizer)#1/(np.exp(z_v/np.max(z_v))+1)
+    im=ax.imshow(np.tanh(z_v),cmap=c_maps[c_idx],norm=normalizer)#1/(np.exp(z_v/np.max(z_v))+1)
     ax.axis('off')
     #fig.colorbar(im)
     #plt.show()
@@ -130,6 +127,7 @@ def plot_fractal(z_v, c_idx = 0):
 
 p = 3
 z = find_fractal(p)
+print(z[np.where(z>1)])
 
 color_index = 9
 plot_fractal(z, c_idx = color_index)
