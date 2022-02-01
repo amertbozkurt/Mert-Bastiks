@@ -127,7 +127,7 @@ for i in range(100):
     p = np.random.randint(2,8)
     color_index = np.random.randint(0,9)
     z = find_fractal(p)
-    plot_fractal(z, c_idx = color_index).savefig(r"TPics/fig_{}".format(i),dpi=100,format='png')
+    plot_fractal(z, c_idx = color_index).savefig(r"TPics/fig_{}.png".format(i),dpi=100)
 
 color_index = 9
 fig = plot_fractal(z, c_idx = color_index)
