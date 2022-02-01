@@ -6,8 +6,6 @@ from numba import jit,njit
 import matplotlib.pyplot as plt
 import matplotlib.colors as colors
 
-
-
 """ 
 This file is meant to generate normalized figures based on the Multibrot sequences z_(n+1)=z^p+c. 
 
@@ -31,9 +29,26 @@ class HistogramNormalize(colors.Normalize):
     def __call__(self, value, clip=None):
         return np.ma.masked_array(np.searchsorted(self.sorted_data, value) /
                                   len(self.sorted_data))
+
+
+def fractal(p,c):
+    """ Generates a fractal from a Multibrot
+    set.
     
+    Parameters
+    ----------
     
-def fractals(p,c):
+    p : int
+        The degree of the polynomial
+    c : complex
+        Initial complex number
+    
+    Returns
+    -------
+    
+    z : The 
+    
+    """
     z=0
     for i in range(100):
         z=z**p+c
@@ -48,7 +63,7 @@ def Rand_pic():
     std=0
     
     while std<1e3:
-        p=np.random.uniform(2,8)
+        p=int(np.random.uniform(2,8))
         x0=np.random.uniform(-2,0.5)
         y0=np.random.uniform(-2,2)
         d_0=np.random.uniform(0,0.75)
@@ -56,7 +71,7 @@ def Rand_pic():
         x_v=np.linspace(x0,x0+d_0,num=128)
         y_v=np.linspace(y0,y0+d_0,num=128)
     
-        z_v=np.abs(np.array([fractals(p,x_v+1j*y_v[i]) for i in range(len(y_v))]))
+        z_v=np.abs(np.array([fractal(p,x_v+1j*y_v[i]) for i in range(len(y_v))]))
         
         std=np.std(z_v)
     #print(std)
@@ -69,5 +84,9 @@ def Rand_pic():
 
     return fig
 
-for i in range(100):
-    Rand_pic().savefig(r"TPics/fig_{}".format(i),dpi=100,format='png')
+# +
+# for i in range(100):
+#     Rand_pic().savefig(r"TPics/fig_{}".format(i),dpi=100,format='png')
+# -
+
+
